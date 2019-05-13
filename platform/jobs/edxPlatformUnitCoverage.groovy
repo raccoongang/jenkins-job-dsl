@@ -4,6 +4,9 @@ import org.yaml.snakeyaml.Yaml
 import static org.edx.jenkins.dsl.JenkinsPublicConstants.GENERAL_PRIVATE_JOB_SECURITY
 import static org.edx.jenkins.dsl.JenkinsPublicConstants.JENKINS_PUBLIC_LOG_ROTATOR
 
+/* Get external variables */
+repo_name = System.getenv('UNIT_COVERAGE_REPO_NAME')
+
 stringParams = [
     [
         name: 'sha1',
@@ -114,7 +117,7 @@ stringParams = [
 Map publicJobConfig = [ open : true,
                         jobName : 'edx-platform-unit-coverage',
                         subsetJob: 'edx-platform-test-subset',
-                        repoName: 'edx-platform-test',
+                        repoName: repo_name,
                         workerLabel: 'coverage-worker',
                         timeout: 20
                         ]

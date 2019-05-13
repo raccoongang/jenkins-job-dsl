@@ -22,6 +22,9 @@ Binding bindings = getBinding()
 config.putAll(bindings.getVariables())
 PrintStream out = config['out']
 
+/* Get external variables */
+repo_name = System.getenv('JS_PR_REPO_NAME')
+
 /* Map to hold the k:v pairs parsed from the secret file */
 Map ghprbMap = [:]
 try {
@@ -52,7 +55,7 @@ catch (any) {
 Map publicJobConfig = [
     open : true,
     jobName : 'edx-platform-js-pr',
-    repoName: 'edx-platform-test',
+    repoName: repo_name,
     workerLabel: 'jenkins-worker',
     whitelistBranchRegex: /^((?!open-release\/).)*$/,
     context: 'jenkins/js',
@@ -62,7 +65,7 @@ Map publicJobConfig = [
 Map publicHawthornJobConfig = [
     open: true,
     jobName: 'hawthorn-js-pr',
-    repoName: 'edx-platform-test',
+    repoName: repo_name,
     workerLabel: 'hawthorn-jenkins-worker',
     whitelistBranchRegex: /open-release\/hawthorn.master/,
     context: 'jenkins/hawthorn/js',
@@ -72,7 +75,7 @@ Map publicHawthornJobConfig = [
 Map publicGinkgoJobConfig = [
     open: true,
     jobName: 'ginkgo-js-pr',
-    repoName: 'edx-platform-test',
+    repoName: repo_name,
     workerLabel: 'ginkgo-jenkins-worker',
     whitelistBranchRegex: /open-release\/ginkgo.master/,
     context: 'jenkins/ginkgo/js',
@@ -82,7 +85,7 @@ Map publicGinkgoJobConfig = [
 Map publicFicusJobConfig = [
     open: true,
     jobName: 'ficus-js-pr',
-    repoName: 'edx-platform-test',
+    repoName: repo_name,
     workerLabel: 'ficus-jenkins-worker',
     whitelistBranchRegex: /open-release\/ficus.master/,
     context: 'jenkins/ficus/js',
@@ -92,7 +95,7 @@ Map publicFicusJobConfig = [
 Map python3JobConfig = [
     open : true,
     jobName : 'edx-platform-python3-js-pr',
-    repoName: 'edx-platform-test',
+    repoName: repo_name,
     workerLabel: 'jenkins-worker',
     whitelistBranchRegex: /^((?!open-release\/).)*$/,
     context: 'jenkins/python3.5/js',

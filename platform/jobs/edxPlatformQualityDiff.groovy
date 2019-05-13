@@ -8,6 +8,9 @@ import static org.edx.jenkins.dsl.JenkinsPublicConstants.JENKINS_PUBLIC_LOG_ROTA
 String deleteReports = 'reports/**/*,test_root/log/*.log,'
 deleteReports += 'edx-platform*/reports/**/*,edx-platform*/test_root/log/*.log,'
 disabled()
+/* Get external variables */
+repo_name = System.getenv('QUALITY_DIFF_REPO_NAME')
+
 stringParams = [
     [
         name: 'sha1',
@@ -56,7 +59,7 @@ Map publicJobConfig = [
     open : true,
     jobName : 'edx-platform-quality-diff',
     subsetJob: 'edx-platform-test-subset',
-    repoName: 'edx-platform-test'
+    repoName: repo_name
 ]
 
 

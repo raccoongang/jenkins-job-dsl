@@ -21,6 +21,9 @@ Binding bindings = getBinding()
 config.putAll(bindings.getVariables())
 PrintStream out = config['out']
 
+/* Get external variables */
+repo_name = System.getenv('JS_MASTER_REPO_NAME')
+
 // This script generates a lot of jobs. Here is the breakdown of the configuration options:
 // Map exampleConfig = [
 //     open: true/false if this job should be 'open' (use the default security scheme or not)
@@ -35,7 +38,7 @@ PrintStream out = config['out']
 Map publicJobConfig = [
     open: true,
     jobName: 'edx-platform-js-master',
-    repoName: 'edx-platform-test',
+    repoName: repo_name,
     workerLabel: 'jenkins-worker',
     context: 'jenkins/js',
     refSpec : '+refs/heads/master:refs/remotes/origin/master',
@@ -45,7 +48,7 @@ Map publicJobConfig = [
 Map hawthornJobConfig = [
     open: true,
     jobName: 'hawthorn-js-master',
-    repoName: 'edx-platform-test',
+    repoName: repo_name,
     workerLabel: 'jenkins-worker',
     context: 'jenkins/hawthorn/js',
     refSpec : '+refs/heads/open-release/hawthorn.master:refs/remotes/origin/open-release/hawthorn.master',
@@ -55,7 +58,7 @@ Map hawthornJobConfig = [
 Map ginkgoJobConfig = [
     open: true,
     jobName: 'ginkgo-js-master',
-    repoName: 'edx-platform-test',
+    repoName: repo_name,
     workerLabel: 'jenkins-worker',
     context: 'jenkins/ginkgo/js',
     refSpec : '+refs/heads/open-release/ginkgo.master:refs/remotes/origin/open-release/ginkgo.master',
@@ -65,7 +68,7 @@ Map ginkgoJobConfig = [
 Map ficusJobConfig = [
     open: true,
     jobName: 'ficus-js-master',
-    repoName: 'edx-platform-test',
+    repoName: repo_name,
     workerLabel: 'jenkins-worker',
     context: 'jenkins/ficus/js',
     refSpec : '+refs/heads/open-release/ficus.master:refs/remotes/origin/open-release/ficus.master',

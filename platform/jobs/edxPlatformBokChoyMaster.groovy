@@ -17,6 +17,9 @@ Binding bindings = getBinding()
 config.putAll(bindings.getVariables())
 PrintStream out = config['out']
 
+/* Get external variables */
+repo_name = System.getenv('BOK_CHOY_MASTER_REPO_NAME')
+
 // This script generates a lot of jobs. Here is the breakdown of the configuration options:
 // Map exampleConfig = [ open: true/false if this job should be 'open' (use the default security scheme or not)
 //                       jobName: name of the job
@@ -33,7 +36,7 @@ Map publicJobConfig = [
     open : true,
     jobName : 'edx-platform-bok-choy-master',
     subsetJob: 'edx-platform-test-subset',
-    repoName: 'edx-platform-test',
+    repoName: repo_name,
     workerLabel: 'jenkins-worker',
     context: 'jenkins/bokchoy',
     defaultTestengBranch: 'master',
@@ -45,7 +48,7 @@ Map publicHawthornJobConfig = [
     open: true,
     jobName: 'hawthorn-bok-choy-master',
     subsetJob: 'edx-platform-test-subset',
-    repoName: 'edx-platform-test',
+    repoName: repo_name,
     workerLabel: 'hawthorn-jenkins-worker',
     context: 'jenkins/hawthorn/bokchoy',
     defaultTestengBranch: 'origin/open-release/hawthorn.master',
@@ -57,7 +60,7 @@ Map publicGinkgoJobConfig = [
     open: true,
     jobName: 'ginkgo-bok-choy-master',
     subsetJob: 'edx-platform-test-subset',
-    repoName: 'edx-platform-test',
+    repoName: repo_name,
     workerLabel: 'ginkgo-jenkins-worker',
     context: 'jenkins/ginkgo/bokchoy',
     defaultTestengBranch: 'origin/open-release/ginkgo.master',
@@ -69,7 +72,7 @@ Map publicFicusJobConfig = [
     open: true,
     jobName: 'ficus-bok-choy-master',
     subsetJob: 'edx-platform-test-subset',
-    repoName: 'edx-platform-test',
+    repoName: repo_name,
     workerLabel: 'ficus-jenkins-worker',
     context: 'jenkins/ficus/bokchoy',
     defaultTestengBranch: 'origin/open-release/ficus.master',

@@ -16,6 +16,9 @@ Binding bindings = getBinding()
 config.putAll(bindings.getVariables())
 PrintStream out = config['out']
 
+/* Get external variables */
+repo_name = System.getenv('PY_UNIT_MASTER_REPO_NAME')
+
 // This script generates a lot of jobs. Here is the breakdown of the configuration options:
 // Map exampleConfig = [
 //     open: true/false if this job should be 'open' (use the default security scheme or not)
@@ -41,7 +44,7 @@ Map publicJobConfig = [
     jobName: 'edx-platform-python-unittests-master',
     flowWorkerLabel: 'flow-worker-python',
     subsetJob: 'edx-platform-test-subset',
-    repoName: 'edx-platform-test',
+    repoName: repo_name,
     runCoverage: true,
     coverageJob: 'edx-platform-unit-coverage',
     workerLabel: 'jenkins-worker',
@@ -57,7 +60,7 @@ Map hawthornJobConfig = [
     jobName: 'hawthorn-python-unittests-master',
     flowWorkerLabel: 'flow-worker-python',
     subsetJob: 'edx-platform-test-subset',
-    repoName: 'edx-platform-test',
+    repoName: repo_name,
     runCoverage: true,
     coverageJob: 'edx-platform-unit-coverage',
     workerLabel: 'hawthorn-jenkins-worker',
@@ -73,7 +76,7 @@ Map ginkgoJobConfig = [
     jobName: 'ginkgo-python-unittests-master',
     flowWorkerLabel: 'flow-worker-python',
     subsetJob: 'edx-platform-test-subset',
-    repoName: 'edx-platform-test',
+    repoName: repo_name,
     runCoverage: true,
     coverageJob: 'edx-platform-unit-coverage',
     workerLabel: 'ginkgo-jenkins-worker',
@@ -89,7 +92,7 @@ Map ficusJobConfig = [
     jobName: 'ficus-python-unittests-master',
     flowWorkerLabel: 'flow-worker-python',
     subsetJob: 'edx-platform-test-subset',
-    repoName: 'edx-platform-test',
+    repoName: repo_name,
     runCoverage: true,
     coverageJob: 'edx-platform-unit-coverage',
     workerLabel: 'ficus-jenkins-worker',

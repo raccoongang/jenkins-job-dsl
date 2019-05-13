@@ -28,6 +28,9 @@ Binding bindings = getBinding()
 config.putAll(bindings.getVariables())
 PrintStream out = config['out']
 
+/* Get external variables */
+repo_name = System.getenv('QUALITY_MASTER_REPO_NAME')
+
 // This script generates a lot of jobs. Here is the breakdown of the configuration options:
 // Map exampleConfig = [
 //     open: true/false if this job should be 'open' (use the default security scheme or not)
@@ -45,7 +48,7 @@ Map publicJobConfig = [
     open: true,
     jobName: 'edx-platform-quality-flow-master',
     subsetJob: 'edx-platform-test-subset',
-    repoName: 'edx-platform-test',
+    repoName: repo_name,
     workerLabel: 'jenkins-worker',
     context: 'jenkins/quality',
     defaultTestengBranch: 'master',
@@ -57,7 +60,7 @@ Map hawthornJobConfig = [
     open: true,
     jobName: 'hawthorn-quality-flow-master',
     subsetJob: 'edx-platform-test-subset',
-    repoName: 'edx-platform-test',
+    repoName: repo_name,
     workerLabel: 'hawthorn-jenkins-worker',
     context: 'jenkins/hawthorn/quality',
     defaultTestengBranch : 'refs/heads/open-release/hawthorn.master',

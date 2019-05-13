@@ -14,6 +14,9 @@ Binding bindings = getBinding()
 config.putAll(bindings.getVariables())
 PrintStream out = config['out']
 
+/* Get external variables */
+repo_name = System.getenv('BOK_CHOY_PR_REPO_NAME')
+
 /* Map to hold the k:v pairs parsed from the secret file */
 Map ghprbMap = [:]
 try {
@@ -48,7 +51,7 @@ catch (any) {
 Map publicJobConfig = [ open : true,
                         jobName : 'edx-platform-bok-choy-pr',
                         subsetJob: 'edx-platform-test-subset',
-                        repoName: 'edx-platform-test',
+                        repoName: repo_name,
                         workerLabel: 'jenkins-worker',
                         whitelistBranchRegex: /^((?!open-release\/).)*$/,
                         context: 'jenkins/bokchoy',
@@ -59,7 +62,7 @@ Map publicJobConfig = [ open : true,
 Map publicHawthornJobConfig = [ open: true,
                                jobName: 'hawthorn-bok-choy-pr',
                                subsetJob: 'edx-platform-test-subset',
-                               repoName: 'edx-platform-test',
+                               repoName: repo_name,
                                workerLabel: 'hawthorn-jenkins-worker',
                                whitelistBranchRegex: /open-release\/hawthorn.master/,
                                context: 'jenkins/hawthorn/bokchoy',
@@ -70,7 +73,7 @@ Map publicHawthornJobConfig = [ open: true,
 Map publicGinkgoJobConfig = [ open: true,
                               jobName: 'ginkgo-bok-choy-pr',
                               subsetJob: 'edx-platform-test-subset',
-                              repoName: 'edx-platform-test',
+                              repoName: repo_name,
                               workerLabel: 'ginkgo-jenkins-worker',
                               whitelistBranchRegex: /open-release\/ginkgo.master/,
                               context: 'jenkins/ginkgo/bokchoy',
@@ -81,7 +84,7 @@ Map publicGinkgoJobConfig = [ open: true,
 Map publicFicusJobConfig = [ open: true,
                              jobName: 'ficus-bok-choy-pr',
                              subsetJob: 'edx-platform-test-subset',
-                             repoName: 'edx-platform-test',
+                             repoName: repo_name,
                              workerLabel: 'ficus-jenkins-worker',
                              whitelistBranchRegex: /open-release\/ficus.master/,
                              context: 'jenkins/ficus/bokchoy',
@@ -92,7 +95,7 @@ Map publicFicusJobConfig = [ open: true,
 Map python3JobConfig = [ open : true,
                          jobName : 'edx-platform-python3-bok-choy-pr',
                          subsetJob: 'edx-platform-test-subset',
-                         repoName: 'edx-platform-test',
+                         repoName: repo_name,
                          workerLabel: 'jenkins-worker',
                          whitelistBranchRegex: /^((?!open-release\/).)*$/,
                          context: 'jenkins/python3.5/bokchoy',

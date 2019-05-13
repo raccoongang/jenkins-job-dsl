@@ -15,6 +15,9 @@ Binding bindings = getBinding()
 config.putAll(bindings.getVariables())
 PrintStream out = config['out']
 
+/* Get external variables */
+repo_name = System.getenv('QUALITY_PR_REPO_NAME')
+
 /* Map to hold the k:v pairs parsed from the secret file */
 Map ghprbMap = [:]
 try {
@@ -55,7 +58,7 @@ Map publicJobConfig = [
     open : true,
     jobName : 'edx-platform-quality-flow-pr',
     subsetJob: 'edx-platform-test-subset',
-    repoName: 'edx-platform-test',
+    repoName: repo_name,
     workerLabel: 'jenkins-worker',
     whitelistBranchRegex: /^((?!open-release\/).)*$/,
     context: 'jenkins/quality',
@@ -69,7 +72,7 @@ Map hawthornJobConfig = [
     open: true,
     jobName: 'hawthorn-quality-flow-pr',
     subsetJob: 'edx-platform-test-subset',
-    repoName: 'edx-platform-test',
+    repoName: repo_name,
     workerLabel: 'hawthorn-jenkins-worker',
     whitelistBranchRegex: /open-release\/hawthorn.master/,
     context: 'jenkins/hawthorn/quality',
@@ -83,7 +86,7 @@ Map python3JobConfig = [
     open : true,
     jobName : 'edx-platform-python3-quality-flow-pr',
     subsetJob: 'edx-platform-test-subset',
-    repoName: 'edx-platform-test',
+    repoName: repo_name,
     workerLabel: 'jenkins-worker',
     whitelistBranchRegex: /^((?!open-release\/).)*$/,
     context: 'jenkins/python3.5/quality',

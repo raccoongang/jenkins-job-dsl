@@ -18,6 +18,9 @@ Binding bindings = getBinding()
 config.putAll(bindings.getVariables())
 PrintStream out = config['out']
 
+/* Get external variables */
+repo_name = System.getenv('LETTUCE_MASTER_REPO_NAME')
+
 // This script generates a lot of jobs. Here is the breakdown of the configuration options:
 // Map exampleConfig = [
 //     open: true/false if this job should be 'open' (use the default security scheme or not)
@@ -35,7 +38,7 @@ Map publicJobConfig = [
     open: true,
     jobName: 'edx-platform-lettuce-master',
     subsetJob: 'edx-platform-test-subset',
-    repoName: 'edx-platform-test',
+    repoName: repo_name,
     workerLabel: 'jenkins-worker',
     context: 'jenkins/lettuce',
     defaultTestengBranch: 'master',
@@ -47,7 +50,7 @@ Map hawthornJobConfig = [
     open: true,
     jobName: 'hawthorn-lettuce-master',
     subsetJob: 'edx-platform-test-subset',
-    repoName: 'edx-platform-test',
+    repoName: repo_name,
     workerLabel: 'hawthorn-jenkins-worker',
     context: 'jenkins/hawthorn/lettuce',
     defaultTestengBranch : 'refs/heads/open-release/hawthorn.master',
@@ -59,7 +62,7 @@ Map ginkgoJobConfig = [
     open: true,
     jobName: 'ginkgo-lettuce-master',
     subsetJob: 'edx-platform-test-subset',
-    repoName: 'edx-platform-test',
+    repoName: repo_name,
     workerLabel: 'ginkgo-jenkins-worker',
     context: 'jenkins/ginkgo/lettuce',
     defaultTestengBranch : 'refs/heads/open-release/ginkgo.master',
@@ -71,7 +74,7 @@ Map ficusJobConfig = [
     open: true,
     jobName: 'ficus-lettuce-master',
     subsetJob: 'edx-platform-test-subset',
-    repoName: 'edx-platform-test',
+    repoName: repo_name,
     workerLabel: 'ficus-jenkins-worker',
     context: 'jenkins/ficus/lettuce',
     defaultTestengBranch : 'refs/heads/open-release/ficus.master',
