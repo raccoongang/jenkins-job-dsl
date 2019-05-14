@@ -14,6 +14,9 @@ Binding bindings = getBinding()
 config.putAll(bindings.getVariables())
 PrintStream out = config['out']
 
+/* Get external variables */
+repo_name = System.getenv('LETTUCE_PR_REPO_NAME')
+
 /* Map to hold the k:v pairs parsed from the secret file */
 Map ghprbMap = [:]
 try {
@@ -47,7 +50,7 @@ catch (any) {
 Map publicJobConfig = [ open : true,
                         jobName : 'edx-platform-lettuce-pr',
                         subsetJob: 'edx-platform-test-subset',
-                        repoName: 'edx-platform',
+                        repoName: repo_name,
                         workerLabel: 'jenkins-worker',
                         whitelistBranchRegex: /^((?!open-release\/).)*$/,
                         context: 'jenkins/lettuce',
@@ -55,21 +58,10 @@ Map publicJobConfig = [ open : true,
                         defaultTestengBranch: 'master'
                         ]
 
-Map privateJobConfig = [ open: false,
-                         jobName: 'edx-platform-lettuce-pr_private',
-                         subsetJob: 'edx-platform-test-subset_private',
-                         repoName: 'edx-platform-private',
-                         workerLabel: 'jenkins-worker',
-                         whitelistBranchRegex: /^((?!open-release\/).)*$/,
-                         context: 'jenkins/lettuce',
-                         triggerPhrase: /.*jenkins\W+run\W+lettuce.*/,
-                         defaultTestengBranch: 'master'
-                         ]
-
 Map publicHawthornJobConfig = [ open: true,
                                jobName: 'hawthorn-lettuce-pr',
                                subsetJob: 'edx-platform-test-subset',
-                               repoName: 'edx-platform',
+                               repoName: repo_name,
                                workerLabel: 'hawthorn-jenkins-worker',
                                whitelistBranchRegex: /open-release\/hawthorn.master/,
                                context: 'jenkins/hawthorn/lettuce',
@@ -77,21 +69,10 @@ Map publicHawthornJobConfig = [ open: true,
                                defaultTestengBranch: 'origin/open-release/hawthorn.master'
                                ]
 
-Map privateHawthornJobConfig = [ open: false,
-                                jobName: 'hawthorn-lettuce-pr_private',
-                                subsetJob: 'edx-platform-test-subset_private',
-                                repoName: 'edx-platform-private',
-                                workerLabel: 'hawthorn-jenkins-worker',
-                                whitelistBranchRegex: /open-release\/hawthorn.master/,
-                                context: 'jenkins/hawthorn/lettuce',
-                                triggerPhrase: /.*jenkins\W+run\W+lettuce.*/,
-                                defaultTestengBranch: 'origin/open-release/hawthorn.master'
-                                ]
-
 Map publicGinkgoJobConfig = [ open: true,
                               jobName: 'ginkgo-lettuce-pr',
                               subsetJob: 'edx-platform-test-subset',
-                              repoName: 'edx-platform',
+                              repoName: repo_name,
                               workerLabel: 'ginkgo-jenkins-worker',
                               whitelistBranchRegex: /open-release\/ginkgo.master/,
                               context: 'jenkins/ginkgo/lettuce',
@@ -99,21 +80,10 @@ Map publicGinkgoJobConfig = [ open: true,
                               defaultTestengBranch: 'origin/open-release/ginkgo.master'
                               ]
 
-Map privateGinkgoJobConfig = [ open: false,
-                               jobName: 'ginkgo-lettuce-pr_private',
-                               subsetJob: 'edx-platform-test-subset_private',
-                               repoName: 'edx-platform-private',
-                               workerLabel: 'ginkgo-jenkins-worker',
-                               whitelistBranchRegex: /open-release\/ginkgo.master/,
-                               context: 'jenkins/ginkgo/lettuce',
-                               triggerPhrase: /.*jenkins\W+run\W+lettuce.*/,
-                               defaultTestengBranch: 'origin/open-release/ginkgo.master'
-                               ]
-
 Map publicFicusJobConfig = [ open: true,
                              jobName: 'ficus-lettuce-pr',
                              subsetJob: 'edx-platform-test-subset',
-                             repoName: 'edx-platform',
+                             repoName: repo_name,
                              workerLabel: 'ficus-jenkins-worker',
                              whitelistBranchRegex: /open-release\/ficus.master/,
                              context: 'jenkins/ficus/lettuce',
@@ -121,21 +91,10 @@ Map publicFicusJobConfig = [ open: true,
                              defaultTestengBranch: 'origin/open-release/ficus.master'
                              ]
 
-Map privateFicusJobConfig = [ open: false,
-                              jobName: 'ficus-lettuce-pr_private',
-                              subsetJob: 'edx-platform-test-subset_private',
-                              repoName: 'edx-platform-private',
-                              workerLabel: 'ficus-jenkins-worker',
-                              whitelistBranchRegex: /open-release\/ficus.master/,
-                              context: 'jenkins/ficus/lettuce',
-                              triggerPhrase: /.*ficus\W+run\W+lettuce.*/,
-                              defaultTestengBranch: 'origin/open-release/ficus.master'
-                              ]
-
 Map python3JobConfig = [ open : true,
                         jobName : 'edx-platform-python3-lettuce-pr',
                         subsetJob: 'edx-platform-test-subset',
-                        repoName: 'edx-platform',
+                        repoName: repo_name,
                         workerLabel: 'jenkins-worker',
                         whitelistBranchRegex: /^((?!open-release\/).)*$/,
                         context: 'jenkins/python3.5/lettuce',
@@ -146,13 +105,9 @@ Map python3JobConfig = [ open : true,
                         ]
 
 List jobConfigs = [ publicJobConfig,
-                    privateJobConfig,
                     publicHawthornJobConfig,
-                    privateHawthornJobConfig,
                     publicGinkgoJobConfig,
-                    privateGinkgoJobConfig,
                     publicFicusJobConfig,
-                    privateFicusJobConfig,
                     python3JobConfig
                     ]
 
@@ -165,9 +120,10 @@ jobConfigs.each { jobConfig ->
             authorization GENERAL_PRIVATE_JOB_SECURITY()
         }
         properties {
-              githubProjectUrl("https://github.com/edx/${jobConfig.repoName}/")
+              githubProjectUrl("https://github.com/raccoongang/${jobConfig.repoName}/")
         }
         logRotator JENKINS_PUBLIC_LOG_ROTATOR(7)
+	disabled()
         concurrentBuild()
         label('flow-worker-lettuce')
         checkoutRetryCount(5)

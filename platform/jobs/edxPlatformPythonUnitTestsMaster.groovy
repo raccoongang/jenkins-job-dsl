@@ -16,6 +16,9 @@ Binding bindings = getBinding()
 config.putAll(bindings.getVariables())
 PrintStream out = config['out']
 
+/* Get external variables */
+repo_name = System.getenv('PY_UNIT_MASTER_REPO_NAME')
+
 // This script generates a lot of jobs. Here is the breakdown of the configuration options:
 // Map exampleConfig = [
 //     open: true/false if this job should be 'open' (use the default security scheme or not)
@@ -41,7 +44,7 @@ Map publicJobConfig = [
     jobName: 'edx-platform-python-unittests-master',
     flowWorkerLabel: 'flow-worker-python',
     subsetJob: 'edx-platform-test-subset',
-    repoName: 'edx-platform',
+    repoName: repo_name,
     runCoverage: true,
     coverageJob: 'edx-platform-unit-coverage',
     workerLabel: 'jenkins-worker',
@@ -52,28 +55,12 @@ Map publicJobConfig = [
     defaultBranch : 'master'
 ]
 
-Map privateJobConfig = [
-    open: false,
-    jobName: 'edx-platform-python-unittests-master_private',
-    flowWorkerLabel: 'flow-worker-python',
-    subsetJob: 'edx-platform-test-subset_private',
-    repoName: 'edx-platform-private',
-    runCoverage: true,
-    coverageJob: 'edx-platform-unit-coverage_private',
-    workerLabel: 'jenkins-worker',
-    context: 'jenkins/python',
-    targetBranch: 'origin/security-release',
-    defaultTestengBranch : 'master',
-    refSpec : '+refs/heads/master:refs/remotes/origin/master',
-    defaultBranch : 'master'
-]
-
 Map hawthornJobConfig = [
     open: true,
     jobName: 'hawthorn-python-unittests-master',
     flowWorkerLabel: 'flow-worker-python',
     subsetJob: 'edx-platform-test-subset',
-    repoName: 'edx-platform',
+    repoName: repo_name,
     runCoverage: true,
     coverageJob: 'edx-platform-unit-coverage',
     workerLabel: 'hawthorn-jenkins-worker',
@@ -89,7 +76,7 @@ Map ginkgoJobConfig = [
     jobName: 'ginkgo-python-unittests-master',
     flowWorkerLabel: 'flow-worker-python',
     subsetJob: 'edx-platform-test-subset',
-    repoName: 'edx-platform',
+    repoName: repo_name,
     runCoverage: true,
     coverageJob: 'edx-platform-unit-coverage',
     workerLabel: 'ginkgo-jenkins-worker',
@@ -105,7 +92,7 @@ Map ficusJobConfig = [
     jobName: 'ficus-python-unittests-master',
     flowWorkerLabel: 'flow-worker-python',
     subsetJob: 'edx-platform-test-subset',
-    repoName: 'edx-platform',
+    repoName: repo_name,
     runCoverage: true,
     coverageJob: 'edx-platform-unit-coverage',
     workerLabel: 'ficus-jenkins-worker',
@@ -118,7 +105,6 @@ Map ficusJobConfig = [
 
 List jobConfigs = [
     publicJobConfig,
-    privateJobConfig,
     hawthornJobConfig,
     ginkgoJobConfig,
     ficusJobConfig
@@ -132,7 +118,7 @@ jobConfigs.each { jobConfig ->
             authorization GENERAL_PRIVATE_JOB_SECURITY()
         }
         properties {
-            githubProjectUrl("https://github.com/edx/${jobConfig.repoName}/")
+            githubProjectUrl("https://github.com/raccoongang/${jobConfig.repoName}/")
         }
         logRotator JENKINS_PUBLIC_LOG_ROTATOR(7)
         concurrentBuild()
@@ -151,7 +137,7 @@ jobConfigs.each { jobConfig ->
         multiscm {
             git {
                 remote {
-                    url("git@github.com:edx/${jobConfig.repoName}.git")
+                    url("git@github.com:raccoongang/${jobConfig.repoName}.git")
                     refspec(jobConfig.refSpec)
                     credentials('jenkins-worker')
                 }
@@ -183,12 +169,11 @@ jobConfigs.each { jobConfig ->
         triggers { githubPush() }
         wrappers {
             timestamps()
-            sshAgent('jenkins-worker')
         }
 
         Map <String, String> predefinedPropsMap  = [:]
         predefinedPropsMap.put('GIT_SHA', '${GIT_COMMIT}')
-        predefinedPropsMap.put('GITHUB_ORG', 'edx')
+        predefinedPropsMap.put('GITHUB_ORG', 'raccoongang')
         predefinedPropsMap.put('CONTEXT', jobConfig.context)
 
         dslFile('testeng-ci/jenkins/flow/master/edx-platform-python-unittests-master.groovy')

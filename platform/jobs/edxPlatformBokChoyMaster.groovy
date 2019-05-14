@@ -17,6 +17,9 @@ Binding bindings = getBinding()
 config.putAll(bindings.getVariables())
 PrintStream out = config['out']
 
+/* Get external variables */
+repo_name = System.getenv('BOK_CHOY_MASTER_REPO_NAME')
+
 // This script generates a lot of jobs. Here is the breakdown of the configuration options:
 // Map exampleConfig = [ open: true/false if this job should be 'open' (use the default security scheme or not)
 //                       jobName: name of the job
@@ -33,19 +36,7 @@ Map publicJobConfig = [
     open : true,
     jobName : 'edx-platform-bok-choy-master',
     subsetJob: 'edx-platform-test-subset',
-    repoName: 'edx-platform',
-    workerLabel: 'jenkins-worker',
-    context: 'jenkins/bokchoy',
-    defaultTestengBranch: 'master',
-    refSpec : '+refs/heads/master:refs/remotes/origin/master',
-    defaultBranch : 'master'
-]
-
-Map privateJobConfig = [
-    open: false,
-    jobName: 'edx-platform-bok-choy-master_private',
-    subsetJob: 'edx-platform-test-subset_private',
-    repoName: 'edx-platform-private',
+    repoName: repo_name,
     workerLabel: 'jenkins-worker',
     context: 'jenkins/bokchoy',
     defaultTestengBranch: 'master',
@@ -57,7 +48,7 @@ Map publicHawthornJobConfig = [
     open: true,
     jobName: 'hawthorn-bok-choy-master',
     subsetJob: 'edx-platform-test-subset',
-    repoName: 'edx-platform',
+    repoName: repo_name,
     workerLabel: 'hawthorn-jenkins-worker',
     context: 'jenkins/hawthorn/bokchoy',
     defaultTestengBranch: 'origin/open-release/hawthorn.master',
@@ -69,7 +60,7 @@ Map publicGinkgoJobConfig = [
     open: true,
     jobName: 'ginkgo-bok-choy-master',
     subsetJob: 'edx-platform-test-subset',
-    repoName: 'edx-platform',
+    repoName: repo_name,
     workerLabel: 'ginkgo-jenkins-worker',
     context: 'jenkins/ginkgo/bokchoy',
     defaultTestengBranch: 'origin/open-release/ginkgo.master',
@@ -81,7 +72,7 @@ Map publicFicusJobConfig = [
     open: true,
     jobName: 'ficus-bok-choy-master',
     subsetJob: 'edx-platform-test-subset',
-    repoName: 'edx-platform',
+    repoName: repo_name,
     workerLabel: 'ficus-jenkins-worker',
     context: 'jenkins/ficus/bokchoy',
     defaultTestengBranch: 'origin/open-release/ficus.master',
@@ -91,7 +82,6 @@ Map publicFicusJobConfig = [
 
 List jobConfigs = [
     publicJobConfig,
-    privateJobConfig,
     publicHawthornJobConfig,
     publicGinkgoJobConfig,
     publicFicusJobConfig
@@ -106,9 +96,10 @@ jobConfigs.each { jobConfig ->
             authorization GENERAL_PRIVATE_JOB_SECURITY()
         }
         properties {
-              githubProjectUrl("https://github.com/edx/${jobConfig.repoName}/")
+              githubProjectUrl("https://github.com/raccoongang/${jobConfig.repoName}/")
         }
         logRotator JENKINS_PUBLIC_LOG_ROTATOR(7)
+        disabled()
         concurrentBuild()
         label('flow-worker-bokchoy')
         checkoutRetryCount(5)
@@ -123,7 +114,7 @@ jobConfigs.each { jobConfig ->
         multiscm {
             git {
                 remote {
-                    url("git@github.com:edx/${jobConfig.repoName}.git")
+                    url("git@github.com:raccoongang/${jobConfig.repoName}.git")
                     refspec(jobConfig.refSpec)
                     credentials('jenkins-worker')
                 }
@@ -155,12 +146,11 @@ jobConfigs.each { jobConfig ->
         triggers { githubPush() }
         wrappers {
             timestamps()
-            sshAgent('jenkins-worker')
         }
 
         Map <String, String> predefinedPropsMap  = [:]
         predefinedPropsMap.put('GIT_SHA', '${GIT_COMMIT}')
-        predefinedPropsMap.put('GITHUB_ORG', 'edx')
+        predefinedPropsMap.put('GITHUB_ORG', 'raccoongang')
         predefinedPropsMap.put('CONTEXT', jobConfig.context)
         predefinedPropsMap.put('GITHUB_REPO', jobConfig.repoName)
         predefinedPropsMap.put('TARGET_URL', JENKINS_PUBLIC_BASE_URL +

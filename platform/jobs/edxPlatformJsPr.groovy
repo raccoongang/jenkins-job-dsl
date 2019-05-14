@@ -22,6 +22,9 @@ Binding bindings = getBinding()
 config.putAll(bindings.getVariables())
 PrintStream out = config['out']
 
+/* Get external variables */
+repo_name = System.getenv('JS_PR_REPO_NAME')
+
 /* Map to hold the k:v pairs parsed from the secret file */
 Map ghprbMap = [:]
 try {
@@ -52,17 +55,7 @@ catch (any) {
 Map publicJobConfig = [
     open : true,
     jobName : 'edx-platform-js-pr',
-    repoName: 'edx-platform',
-    workerLabel: 'jenkins-worker',
-    whitelistBranchRegex: /^((?!open-release\/).)*$/,
-    context: 'jenkins/js',
-    triggerPhrase: /.*jenkins\W+run\W+js.*/
-]
-
-Map privateJobConfig = [
-    open: false,
-    jobName: 'edx-platform-js-pr_private',
-    repoName: 'edx-platform-private',
+    repoName: repo_name,
     workerLabel: 'jenkins-worker',
     whitelistBranchRegex: /^((?!open-release\/).)*$/,
     context: 'jenkins/js',
@@ -72,17 +65,7 @@ Map privateJobConfig = [
 Map publicHawthornJobConfig = [
     open: true,
     jobName: 'hawthorn-js-pr',
-    repoName: 'edx-platform',
-    workerLabel: 'hawthorn-jenkins-worker',
-    whitelistBranchRegex: /open-release\/hawthorn.master/,
-    context: 'jenkins/hawthorn/js',
-    triggerPhrase: /.*hawthorn\W+run\W+js.*/
-]
-
-Map privateHawthornJobConfig = [
-    open: false,
-    jobName: 'hawthorn-js-pr_private',
-    repoName: 'edx-platform-private',
+    repoName: repo_name,
     workerLabel: 'hawthorn-jenkins-worker',
     whitelistBranchRegex: /open-release\/hawthorn.master/,
     context: 'jenkins/hawthorn/js',
@@ -92,17 +75,7 @@ Map privateHawthornJobConfig = [
 Map publicGinkgoJobConfig = [
     open: true,
     jobName: 'ginkgo-js-pr',
-    repoName: 'edx-platform',
-    workerLabel: 'ginkgo-jenkins-worker',
-    whitelistBranchRegex: /open-release\/ginkgo.master/,
-    context: 'jenkins/ginkgo/js',
-    triggerPhrase: /.*ginkgo\W+run\W+js.*/
-]
-
-Map privateGinkgoJobConfig = [
-    open: false,
-    jobName: 'ginkgo-js-pr_private',
-    repoName: 'edx-platform-private',
+    repoName: repo_name,
     workerLabel: 'ginkgo-jenkins-worker',
     whitelistBranchRegex: /open-release\/ginkgo.master/,
     context: 'jenkins/ginkgo/js',
@@ -112,17 +85,7 @@ Map privateGinkgoJobConfig = [
 Map publicFicusJobConfig = [
     open: true,
     jobName: 'ficus-js-pr',
-    repoName: 'edx-platform',
-    workerLabel: 'ficus-jenkins-worker',
-    whitelistBranchRegex: /open-release\/ficus.master/,
-    context: 'jenkins/ficus/js',
-    triggerPhrase: /.*ficus\W+run\W+js.*/
-]
-
-Map privateFicusJobConfig = [
-    open: false,
-    jobName: 'ficus-js-pr_private',
-    repoName: 'edx-platform-private',
+    repoName: repo_name,
     workerLabel: 'ficus-jenkins-worker',
     whitelistBranchRegex: /open-release\/ficus.master/,
     context: 'jenkins/ficus/js',
@@ -132,7 +95,7 @@ Map privateFicusJobConfig = [
 Map python3JobConfig = [
     open : true,
     jobName : 'edx-platform-python3-js-pr',
-    repoName: 'edx-platform',
+    repoName: repo_name,
     workerLabel: 'jenkins-worker',
     whitelistBranchRegex: /^((?!open-release\/).)*$/,
     context: 'jenkins/python3.5/js',
@@ -143,13 +106,9 @@ Map python3JobConfig = [
 
 List jobConfigs = [
     publicJobConfig,
-    privateJobConfig,
     publicHawthornJobConfig,
-    privateHawthornJobConfig,
     publicGinkgoJobConfig,
-    privateGinkgoJobConfig,
     publicFicusJobConfig,
-    privateFicusJobConfig,
     python3JobConfig
 ]
 
@@ -163,9 +122,10 @@ jobConfigs.each { jobConfig ->
             authorization GENERAL_PRIVATE_JOB_SECURITY()
         }
         properties {
-              githubProjectUrl("https://github.com/edx/${jobConfig.repoName}/")
+              githubProjectUrl("https://github.com/raccoongang/${jobConfig.repoName}/")
         }
         logRotator JENKINS_PUBLIC_LOG_ROTATOR(7)
+	disabled()
         concurrentBuild()
         environmentVariables {
             env('TOX_ENV', jobConfig.toxEnv)
@@ -179,7 +139,7 @@ jobConfigs.each { jobConfig ->
         scm {
             git {
                 remote {
-                    url("git@github.com:edx/${jobConfig.repoName}.git")
+                    url("git@github.com:raccoongang/${jobConfig.repoName}.git")
                     refspec('+refs/pull/*:refs/remotes/origin/pr/*')
                     credentials('jenkins-worker')
                 }
@@ -224,7 +184,6 @@ jobConfigs.each { jobConfig ->
             timestamps()
             colorizeOutput()
             buildName('#${BUILD_NUMBER}: Javascript Tests')
-            sshAgent('jenkins-worker')
         }
         steps {
             shell("cd ${jobConfig.repoName}; TEST_SUITE=js-unit ./scripts/all-tests.sh")

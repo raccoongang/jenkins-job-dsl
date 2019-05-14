@@ -15,6 +15,9 @@ Binding bindings = getBinding()
 config.putAll(bindings.getVariables())
 PrintStream out = config['out']
 
+/* Get external variables */
+repo_name = System.getenv('QUALITY_PR_REPO_NAME')
+
 /* Map to hold the k:v pairs parsed from the secret file */
 Map ghprbMap = [:]
 try {
@@ -55,7 +58,7 @@ Map publicJobConfig = [
     open : true,
     jobName : 'edx-platform-quality-flow-pr',
     subsetJob: 'edx-platform-test-subset',
-    repoName: 'edx-platform',
+    repoName: repo_name,
     workerLabel: 'jenkins-worker',
     whitelistBranchRegex: /^((?!open-release\/).)*$/,
     context: 'jenkins/quality',
@@ -65,25 +68,11 @@ Map publicJobConfig = [
     diffJob: 'edx-platform-quality-diff'
 ]
 
-Map privateJobConfig = [
-    open: false,
-    jobName: 'edx-platform-quality-flow-pr_private',
-    subsetJob: 'edx-platform-test-subset_private',
-    repoName: 'edx-platform-private',
-    workerLabel: 'jenkins-worker',
-    whitelistBranchRegex: /^((?!open-release\/).)*$/,
-    context: 'jenkins/quality',
-    triggerPhrase: /.*jenkins\W+run\W+quality.*/,
-    defaultTestengBranch: 'master',
-    targetBranch: 'origin/security-release',
-    diffJob: 'edx-platform-quality-diff_private'
-]
-
 Map hawthornJobConfig = [
     open: true,
     jobName: 'hawthorn-quality-flow-pr',
     subsetJob: 'edx-platform-test-subset',
-    repoName: 'edx-platform',
+    repoName: repo_name,
     workerLabel: 'hawthorn-jenkins-worker',
     whitelistBranchRegex: /open-release\/hawthorn.master/,
     context: 'jenkins/hawthorn/quality',
@@ -97,7 +86,7 @@ Map python3JobConfig = [
     open : true,
     jobName : 'edx-platform-python3-quality-flow-pr',
     subsetJob: 'edx-platform-test-subset',
-    repoName: 'edx-platform',
+    repoName: repo_name,
     workerLabel: 'jenkins-worker',
     whitelistBranchRegex: /^((?!open-release\/).)*$/,
     context: 'jenkins/python3.5/quality',
@@ -111,7 +100,6 @@ Map python3JobConfig = [
 
 List jobConfigs = [
     publicJobConfig,
-    privateJobConfig,
     hawthornJobConfig,
     python3JobConfig
 ]
@@ -124,9 +112,10 @@ jobConfigs.each { jobConfig ->
             authorization GENERAL_PRIVATE_JOB_SECURITY()
         }
         properties {
-            githubProjectUrl("https://github.com/edx/${jobConfig.repoName}/")
+            githubProjectUrl("https://github.com/raccoongang/${jobConfig.repoName}/")
         }
         logRotator JENKINS_PUBLIC_LOG_ROTATOR(7)
+	disabled()
         concurrentBuild()
         label('flow-worker-quality')
         checkoutRetryCount(5)

@@ -7,6 +7,9 @@ import static org.edx.jenkins.dsl.JenkinsPublicConstants.JENKINS_PUBLIC_LOG_ROTA
 
 String deleteReports = 'reports/**/*,test_root/log/*.log,'
 deleteReports += 'edx-platform*/reports/**/*,edx-platform*/test_root/log/*.log,'
+disabled()
+/* Get external variables */
+repo_name = System.getenv('QUALITY_DIFF_REPO_NAME')
 
 stringParams = [
     [
@@ -56,17 +59,13 @@ Map publicJobConfig = [
     open : true,
     jobName : 'edx-platform-quality-diff',
     subsetJob: 'edx-platform-test-subset',
-    repoName: 'edx-platform'
+    repoName: repo_name
 ]
 
-Map privateJobConfig = [
-    open : false,
-    jobName : 'edx-platform-quality-diff_private',
-    subsetJob: 'edx-platform-test-subset_private',
-    repoName: 'edx-platform-private'
-]
 
-List jobConfigs = [ publicJobConfig, privateJobConfig ]
+List jobConfigs = [
+    publicJobConfig,
+]
 
 jobConfigs.each { jobConfig ->
 
@@ -90,7 +89,7 @@ jobConfigs.each { jobConfig ->
         scm {
             git {
                 remote {
-                    url("git@github.com:edx/${jobConfig.repoName}.git")
+                    url("git@github.com:raccoongang/${jobConfig.repoName}.git")
                     refspec('+refs/pull/*:refs/remotes/origin/pr/*')
                     if (!jobConfig.open.toBoolean()) {
                         credentials('jenkins-worker')
@@ -120,7 +119,6 @@ jobConfigs.each { jobConfig ->
                 includePattern(deleteReports)
                 deleteDirectories()
             }
-            sshAgent('jenkins-worker')
             buildName('#\${BUILD_NUMBER}: \${GIT_REVISION,length=8}')
         }
         steps {

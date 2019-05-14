@@ -18,6 +18,9 @@ Binding bindings = getBinding()
 config.putAll(bindings.getVariables())
 PrintStream out = config['out']
 
+/* Get external variables */
+repo_name = System.getenv('ACCESSIBILITY_MASTER_REPO_NAME')
+
 // This script generates a lot of jobs. Here is the breakdown of the configuration options:
 // Map exampleConfig = [
 //     open: true/false if this job should be 'open' (use the default security scheme or not)
@@ -32,17 +35,7 @@ PrintStream out = config['out']
 Map publicJobConfig = [
     open: true,
     jobName: 'edx-platform-accessibility-master',
-    repoName: 'edx-platform',
-    workerLabel: 'jenkins-worker',
-    context: 'jenkins/a11y',
-    refSpec : '+refs/heads/master:refs/remotes/origin/master',
-    defaultBranch : 'master'
-]
-
-Map privateJobConfig = [
-    open: false,
-    jobName: 'edx-platform-accessibility-master_private',
-    repoName: 'edx-platform-private',
+    repoName: repo_name,
     workerLabel: 'jenkins-worker',
     context: 'jenkins/a11y',
     refSpec : '+refs/heads/master:refs/remotes/origin/master',
@@ -52,7 +45,7 @@ Map privateJobConfig = [
 Map hawthornJobConfig = [
     open: true,
     jobName: 'hawthorn-accessibility-master',
-    repoName: 'edx-platform',
+    repoName: repo_name,
     workerLabel: 'hawthorn-jenkins-worker',
     context: 'jenkins/hawthorn/a11y',
     refSpec : '+refs/heads/open-release/hawthorn.master:refs/remotes/origin/open-release/hawthorn.master',
@@ -62,7 +55,7 @@ Map hawthornJobConfig = [
 Map ginkgoJobConfig = [
     open: true,
     jobName: 'ginkgo-accessibility-master',
-    repoName: 'edx-platform',
+    repoName: repo_name,
     workerLabel: 'ginkgo-jenkins-worker',
     context: 'jenkins/ginkgo/a11y',
     refSpec : '+refs/heads/open-release/ginkgo.master:refs/remotes/origin/open-release/ginkgo.master',
@@ -72,7 +65,7 @@ Map ginkgoJobConfig = [
 Map ficusJobConfig = [
     open: true,
     jobName: 'ficus-accessibility-master',
-    repoName: 'edx-platform',
+    repoName: repo_name,
     workerLabel: 'ficus-jenkins-worker',
     context: 'jenkins/ficus/a11y',
     refSpec : '+refs/heads/open-release/ficus.master:refs/remotes/origin/open-release/ficus.master',
@@ -81,7 +74,6 @@ Map ficusJobConfig = [
 
 List jobConfigs = [
     publicJobConfig,
-    privateJobConfig,
     hawthornJobConfig,
     ginkgoJobConfig,
     ficusJobConfig
@@ -95,9 +87,10 @@ jobConfigs.each { jobConfig ->
             authorization GENERAL_PRIVATE_JOB_SECURITY()
         }
         properties {
-            githubProjectUrl("https://github.com/edx/${jobConfig.repoName}/")
+            githubProjectUrl("https://github.com/raccoongang/${jobConfig.repoName}/")
         }
         logRotator JENKINS_PUBLIC_LOG_ROTATOR(7)
+        disabled()
         concurrentBuild()
         parameters {
             labelParam('WORKER_LABEL') {
@@ -108,7 +101,7 @@ jobConfigs.each { jobConfig ->
         scm {
             git {
                 remote {
-                    url("git@github.com:edx/${jobConfig.repoName}.git")
+                    url("git@github.com:raccoongang/${jobConfig.repoName}.git")
                     refspec(jobConfig.refSpec)
                     credentials('jenkins-worker')
                 }
@@ -133,7 +126,6 @@ jobConfigs.each { jobConfig ->
             }
             timestamps()
             colorizeOutput('gnome-terminal')
-            sshAgent('jenkins-worker')
             credentialsBinding {
                 string('AWS_ACCESS_KEY_ID', 'DB_CACHE_ACCESS_KEY_ID')
                 string('AWS_SECRET_ACCESS_KEY', 'DB_CACHE_SECRET_ACCESS_KEY')
@@ -142,7 +134,7 @@ jobConfigs.each { jobConfig ->
 
         Map <String, String> predefinedPropsMap  = [:]
         predefinedPropsMap.put('GIT_SHA', '${GIT_COMMIT}')
-        predefinedPropsMap.put('GITHUB_ORG', 'edx')
+        predefinedPropsMap.put('GITHUB_ORG', 'raccoongang')
         predefinedPropsMap.put('CONTEXT', jobConfig.context)
         predefinedPropsMap.put('GITHUB_REPO', jobConfig.repoName)
         predefinedPropsMap.put('TARGET_URL', JENKINS_PUBLIC_BASE_URL +

@@ -28,20 +28,12 @@ Map exampleConfig = [
 Map publicJobConfig = [
     open : true,
     jobName : 'edx-platform-test-subset',
-    url : 'edx/edx-platform',
+    url : 'raccoongang/edx-platform-test',
     cloneReference : 'edx-platform-clone/.git'
-]
-
-Map privateJobConfig = [
-    open : false,
-    jobName : 'edx-platform-test-subset_private',
-    url : 'edx/edx-platform-private',
-    cloneReference : 'edx-platform-private-clone/.git'
 ]
 
 List jobConfigs = [
     publicJobConfig,
-    privateJobConfig
 ]
 
 stringParams = [
@@ -87,7 +79,7 @@ jobConfigs.each { jobConfig ->
         if (!jobConfig.open.toBoolean()) {
             authorization {
                 blocksInheritance(true)
-                permissionAll('edx')
+                permissionAll('raccoongang')
                 permission('hudson.model.Item.Discover', 'anonymous')
             }
         }
@@ -102,7 +94,7 @@ jobConfigs.each { jobConfig ->
                 defaultValue(JENKINS_PUBLIC_WORKER)
             }
         }
-
+	disabled()
         concurrentBuild(true)
 
         /*  configure project to pull from a github repo */
@@ -139,7 +131,6 @@ jobConfigs.each { jobConfig ->
             environmentVariables {
                 groovy(readFileFromWorkspace('platform/resources/mapEnvVars.groovy'))
             }
-            sshAgent('jenkins-worker')
             buildName('#\${BUILD_NUMBER}: \${ENV,var=\"TEST_SUITE\"} \${ENV,var=\"SHARD\"}')
             credentialsBinding {
                 string('AWS_ACCESS_KEY_ID', 'DB_CACHE_ACCESS_KEY_ID')
