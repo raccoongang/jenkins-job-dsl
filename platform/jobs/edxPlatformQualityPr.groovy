@@ -17,6 +17,8 @@ PrintStream out = config['out']
 
 /* Get external variables */
 repo_name = System.getenv('QUALITY_PR_REPO_NAME')
+hawthorn_branch_name = System.getenv('HAWTHORN_BRANCH_NAME')
+hawthorn_branch_name_regex = System.getenv('HAWTHORN_BRANCH_NAME_REGEX')
 
 /* Map to hold the k:v pairs parsed from the secret file */
 Map ghprbMap = [:]
@@ -74,11 +76,11 @@ Map hawthornJobConfig = [
     subsetJob: 'edx-platform-test-subset',
     repoName: repo_name,
     workerLabel: 'hawthorn-jenkins-worker',
-    whitelistBranchRegex: /open-release\/hawthorn.master/,
+    whitelistBranchRegex: '/' + hawthorn_branch_name_regex + '/',
     context: 'jenkins/hawthorn/quality',
     triggerPhrase: /.*hawthorn\W+run\W+quality.*/,
-    defaultTestengBranch: 'origin/open-release/hawthorn.master',
-    targetBranch: 'origin/open-release/hawthorn.master',
+    defaultTestengBranch: 'origin/' + hawthorn_branch_name,
+    targetBranch: 'origin/' + hawthorn_branch_name,
     diffJob: 'edx-platform-quality-diff'
 ]
 

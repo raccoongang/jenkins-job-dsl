@@ -15,6 +15,12 @@ PrintStream out = config['out']
 
 /* Get external variables */
 repo_name = System.getenv('PY_UNIT_PR_REPO_NAME')
+ficus_branch_name = System.getenv('FICUS_BRANCH_NAME')
+ginkgo_branch_name = System.getenv('GINKGO_BRANCH_NAME')
+hawthorn_branch_name = System.getenv('HAWTHORN_BRANCH_NAME')
+ficus_branch_name_regex = System.getenv('FICUS_BRANCH_NAME_REGEX')
+ginkgo_branch_name_regex = System.getenv('GINKGO_BRANCH_NAME_REGEX')
+hawthorn_branch_name_regex = System.getenv('HAWTHORN_BRANCH_NAME_REGEX')
 
 /* Map to hold the k:v pairs parsed from the secret file */
 Map ghprbMap = [:]
@@ -77,11 +83,11 @@ Map publicHawthornJobConfig = [ open: true,
                                runCoverage: true,
                                coverageJob: 'edx-platform-unit-coverage',
                                workerLabel: 'hawthorn-jenkins-worker',
-                               whitelistBranchRegex: /open-release\/hawthorn.master/,
+                               whitelistBranchRegex: '/' + hawthorn_branch_name_regex + '/',
                                context: 'jenkins/hawthorn/python',
                                triggerPhrase: /.*hawthorn\W+run\W+python.*/,
-                               targetBranch: 'origin/open-release/hawthorn.master',
-                               defaultTestengBranch: 'origin/open-release/hawthorn.master'
+                               targetBranch: 'origin/' + hawthorn_branch_name,
+                               defaultTestengBranch: 'origin/' + hawthorn_branch_name
                                ]
 
 Map publicGinkgoJobConfig = [ open: true,
@@ -92,11 +98,11 @@ Map publicGinkgoJobConfig = [ open: true,
                               runCoverage: true,
                               coverageJob: 'edx-platform-unit-coverage',
                               workerLabel: 'ginkgo-jenkins-worker',
-                              whitelistBranchRegex: /open-release\/ginkgo.master/,
+                              whitelistBranchRegex: '/' + ginkgo_branch_name_regex + '/',
                               context: 'jenkins/ginkgo/python',
                               triggerPhrase: /.*ginkgo\W+run\W+python.*/,
-                              targetBranch: 'origin/open-release/ginkgo.master',
-                              defaultTestengBranch: 'origin/open-release/ginkgo.master'
+                              targetBranch: 'origin/' + ginkgo_branch_name,
+                              defaultTestengBranch: 'origin/' + ginkgo_branch_name
                               ]
 
 Map publicFicusJobConfig = [ open: true,
@@ -107,11 +113,11 @@ Map publicFicusJobConfig = [ open: true,
                              runCoverage: true,
                              coverageJob: 'edx-platform-unit-coverage',
                              workerLabel: 'ficus-jenkins-worker',
-                             whitelistBranchRegex: /open-release\/ficus.master/,
+                             whitelistBranchRegex: '/' + ficus_branch_name_regex '/',
                              context: 'jenkins/ficus/python',
                              triggerPhrase: /.*ficus\W+run\W+python.*/,
-                             targetBranch: 'origin/open-release/ficus.master',
-                             defaultTestengBranch: 'origin/open-release/ficus.master'
+                             targetBranch: 'origin/' + ficus_branch_name,
+                             defaultTestengBranch: 'origin/' + ficus_branch_name
                              ]
 
 Map python3JobConfig = [ open: true,

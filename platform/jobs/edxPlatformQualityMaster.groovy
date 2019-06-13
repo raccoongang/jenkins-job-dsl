@@ -30,6 +30,7 @@ PrintStream out = config['out']
 
 /* Get external variables */
 repo_name = System.getenv('QUALITY_MASTER_REPO_NAME')
+hawthorn_branch_name = System.getenv('HAWTHORN_BRANCH_NAME')
 
 // This script generates a lot of jobs. Here is the breakdown of the configuration options:
 // Map exampleConfig = [
@@ -63,9 +64,9 @@ Map hawthornJobConfig = [
     repoName: repo_name,
     workerLabel: 'hawthorn-jenkins-worker',
     context: 'jenkins/hawthorn/quality',
-    defaultTestengBranch : 'refs/heads/open-release/hawthorn.master',
-    refSpec : '+refs/heads/open-release/hawthorn.master:refs/remotes/origin/open-release/hawthorn.master',
-    defaultBranch : 'refs/heads/open-release/hawthorn.master'
+    defaultTestengBranch : 'refs/heads/' + hawthorn_branch_name,
+    refSpec : '+refs/heads/' + hawthorn_branch_name + ':refs/remotes/origin/' + hawthorn_branch_name,
+    defaultBranch : 'refs/heads/' + hawthorn_branch_name
 ]
 
 List jobConfigs = [
