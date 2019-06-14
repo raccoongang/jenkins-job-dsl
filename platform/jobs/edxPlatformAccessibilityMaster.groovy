@@ -20,6 +20,9 @@ PrintStream out = config['out']
 
 /* Get external variables */
 repo_name = System.getenv('ACCESSIBILITY_MASTER_REPO_NAME')
+ficus_branch_name = System.getenv('FICUS_BRANCH_NAME')
+ginkgo_branch_name = System.getenv('GINKGO_BRANCH_NAME')
+hawthorn_branch_name = System.getenv('HAWTHORN_BRANCH_NAME')
 
 // This script generates a lot of jobs. Here is the breakdown of the configuration options:
 // Map exampleConfig = [
@@ -48,8 +51,8 @@ Map hawthornJobConfig = [
     repoName: repo_name,
     workerLabel: 'hawthorn-jenkins-worker',
     context: 'jenkins/hawthorn/a11y',
-    refSpec : '+refs/heads/open-release/hawthorn.master:refs/remotes/origin/open-release/hawthorn.master',
-    defaultBranch : 'refs/heads/open-release/hawthorn.master'
+    refSpec : '+refs/heads/' + hawthorn_branch_name + ':refs/remotes/origin/' + hawthorn_branch_name,
+    defaultBranch : 'refs/heads/' + hawthorn_branch_name
 ]
 
 Map ginkgoJobConfig = [
@@ -58,8 +61,8 @@ Map ginkgoJobConfig = [
     repoName: repo_name,
     workerLabel: 'ginkgo-jenkins-worker',
     context: 'jenkins/ginkgo/a11y',
-    refSpec : '+refs/heads/open-release/ginkgo.master:refs/remotes/origin/open-release/ginkgo.master',
-    defaultBranch : 'refs/heads/open-release/ginkgo.master'
+    refSpec : '+refs/heads/' + ginkgo_branch_name + ':refs/remotes/origin/' + ginkgo_branch_name,
+    defaultBranch : 'refs/heads/' + ginkgo_branch_name
 ]
 
 Map ficusJobConfig = [
@@ -68,8 +71,8 @@ Map ficusJobConfig = [
     repoName: repo_name,
     workerLabel: 'ficus-jenkins-worker',
     context: 'jenkins/ficus/a11y',
-    refSpec : '+refs/heads/open-release/ficus.master:refs/remotes/origin/open-release/ficus.master',
-    defaultBranch : 'refs/heads/open-release/ficus.master'
+    refSpec : '+refs/heads/' + ficus_branch_name + ':refs/remotes/origin/' + ficus_branch_name,
+    defaultBranch : 'refs/heads/' + ficus_branch_name
 ]
 
 List jobConfigs = [

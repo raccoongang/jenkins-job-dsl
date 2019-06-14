@@ -24,6 +24,9 @@ PrintStream out = config['out']
 
 /* Get external variables */
 repo_name = System.getenv('JS_PR_REPO_NAME')
+ficus_branch_name_regex = System.getenv('FICUS_BRANCH_NAME_REGEX')
+ginkgo_branch_name_regex = System.getenv('GINKGO_BRANCH_NAME_REGEX')
+hawthorn_branch_name_regex = System.getenv('HAWTHORN_BRANCH_NAME_REGEX')
 
 /* Map to hold the k:v pairs parsed from the secret file */
 Map ghprbMap = [:]
@@ -67,7 +70,7 @@ Map publicHawthornJobConfig = [
     jobName: 'hawthorn-js-pr',
     repoName: repo_name,
     workerLabel: 'hawthorn-jenkins-worker',
-    whitelistBranchRegex: /open-release\/hawthorn.master/,
+    whitelistBranchRegex: '/' + hawthorn_branch_name_regex + '/',
     context: 'jenkins/hawthorn/js',
     triggerPhrase: /.*hawthorn\W+run\W+js.*/
 ]
@@ -77,7 +80,7 @@ Map publicGinkgoJobConfig = [
     jobName: 'ginkgo-js-pr',
     repoName: repo_name,
     workerLabel: 'ginkgo-jenkins-worker',
-    whitelistBranchRegex: /open-release\/ginkgo.master/,
+    whitelistBranchRegex: '/' + ginkgo_branch_name_regex + '/',
     context: 'jenkins/ginkgo/js',
     triggerPhrase: /.*ginkgo\W+run\W+js.*/
 ]
@@ -87,7 +90,7 @@ Map publicFicusJobConfig = [
     jobName: 'ficus-js-pr',
     repoName: repo_name,
     workerLabel: 'ficus-jenkins-worker',
-    whitelistBranchRegex: /open-release\/ficus.master/,
+    whitelistBranchRegex: '/' + ficus_branch_name_regex + '/',
     context: 'jenkins/ficus/js',
     triggerPhrase: /.*ficus\W+run\W+js.*/
 ]
