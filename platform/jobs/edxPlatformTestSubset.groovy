@@ -7,6 +7,8 @@ import static org.edx.jenkins.dsl.JenkinsPublicConstants.JENKINS_PUBLIC_LOG_ROTA
 import static org.edx.jenkins.dsl.JenkinsPublicConstants.JENKINS_PUBLIC_WORKER
 import static org.edx.jenkins.dsl.JenkinsPublicConstants.JENKINS_PUBLIC_GITHUB_BASEURL
 
+raccoon_repo_url = System.getenv('RACCOON_REPO_URL')
+
 /* stdout logger */
 /* use this instead of println, because you can pass it into closures or other scripts. */
 /* TODO: Move this into JenkinsPublicConstants, as it can be shared. */
@@ -28,7 +30,7 @@ Map exampleConfig = [
 Map publicJobConfig = [
     open : true,
     jobName : 'edx-platform-test-subset',
-    url : 'raccoongang/edx-platform-test',
+    url : raccoon_repo_url,
     cloneReference : 'edx-platform-clone/.git'
 ]
 
