@@ -19,6 +19,11 @@ repo_name = System.getenv('BOK_CHOY_PR_REPO_NAME')
 ficus_branch_name = System.getenv('FICUS_BRANCH_NAME')
 ginkgo_branch_name = System.getenv('GINKGO_BRANCH_NAME')
 hawthorn_branch_name = System.getenv('HAWTHORN_BRANCH_NAME')
+
+ficus_test_branch_name = System.getenv('FICUS_TEST_BRANCH_NAME')
+ginkgo_test_branch_name = System.getenv('GINKGO_TEST_BRANCH_NAME')
+hawthorn_test_branch_name = System.getenv('HAWTHORN_TEST_BRANCH_NAME')
+
 ficus_branch_name_regex = System.getenv('FICUS_BRANCH_NAME_REGEX')
 ginkgo_branch_name_regex = System.getenv('GINKGO_BRANCH_NAME_REGEX')
 hawthorn_branch_name_regex = System.getenv('HAWTHORN_BRANCH_NAME_REGEX')
@@ -73,7 +78,7 @@ Map publicHawthornJobConfig = [ open: true,
                                whitelistBranchRegex: '/' + hawthorn_branch_name_regex +'/',
                                context: 'jenkins/hawthorn/bokchoy',
                                triggerPhrase: /.*hawthorn\W+run\W+bokchoy.*/,
-                               defaultTestengBranch: 'origin/' + hawthorn_branch_name
+                               defaultTestengBranch: 'origin/' + hawthorn_test_branch_name
                                ]
 
 Map publicGinkgoJobConfig = [ open: true,
@@ -84,7 +89,7 @@ Map publicGinkgoJobConfig = [ open: true,
                               whitelistBranchRegex: '/' + ginkgo_branch_name_regex + '/',
                               context: 'jenkins/ginkgo/bokchoy',
                               triggerPhrase: /.*ginkgo\W+run\W+bokchoy.*/,
-                              defaultTestengBranch: 'origin/' + ginkgo_branch_name
+                              defaultTestengBranch: 'origin/' + ginkgo_test_branch_name
                               ]
 
 Map publicFicusJobConfig = [ open: true,
@@ -95,7 +100,7 @@ Map publicFicusJobConfig = [ open: true,
                              whitelistBranchRegex: '/' + ficus_branch_name_regex + '/',
                              context: 'jenkins/ficus/bokchoy',
                              triggerPhrase: /.*ficus\W+run\W+bokchoy.*/,
-                             defaultTestengBranch: 'origin/' + ficus_branch_name
+                             defaultTestengBranch: 'origin/' + ficus_test_branch_name
                              ]
 
 Map python3JobConfig = [ open : true,
