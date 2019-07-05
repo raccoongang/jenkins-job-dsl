@@ -23,6 +23,11 @@ ficus_branch_name = System.getenv('FICUS_BRANCH_NAME')
 ginkgo_branch_name = System.getenv('GINKGO_BRANCH_NAME')
 hawthorn_branch_name = System.getenv('HAWTHORN_BRANCH_NAME')
 
+ficus_test_branch_name = System.getenv('FICUS_TEST_BRANCH_NAME')
+ginkgo_test_branch_name = System.getenv('GINKGO_TEST_BRANCH_NAME')
+hawthorn_test_branch_name = System.getenv('HAWTHORN_TEST_BRANCH_NAME')
+
+
 // This script generates a lot of jobs. Here is the breakdown of the configuration options:
 // Map exampleConfig = [ open: true/false if this job should be 'open' (use the default security scheme or not)
 //                       jobName: name of the job
@@ -54,7 +59,7 @@ Map publicHawthornJobConfig = [
     repoName: repo_name,
     workerLabel: 'hawthorn-jenkins-worker',
     context: 'jenkins/hawthorn/bokchoy',
-    defaultTestengBranch: 'origin/' + hawthorn_branch_name,
+    defaultTestengBranch: 'origin/' + hawthorn_test_branch_name,
     refSpec : '+refs/heads/' + hawthorn_branch_name + ':refs/remotes/origin/' + hawthorn_branch_name,
     defaultBranch : 'refs/heads/' + hawthorn_branch_name
 ]
@@ -66,7 +71,7 @@ Map publicGinkgoJobConfig = [
     repoName: repo_name,
     workerLabel: 'ginkgo-jenkins-worker',
     context: 'jenkins/ginkgo/bokchoy',
-    defaultTestengBranch: 'origin/' + ginkgo_branch_name,
+    defaultTestengBranch: 'origin/' + ginkgo_test_branch_name,
     refSpec : '+refs/heads/' + ginkgo_branch_name + ':refs/remotes/origin/' + ginkgo_branch_name,
     defaultBranch : 'refs/heads/' + ginkgo_branch_name
 ]
@@ -78,7 +83,7 @@ Map publicFicusJobConfig = [
     repoName: repo_name,
     workerLabel: 'ficus-jenkins-worker',
     context: 'jenkins/ficus/bokchoy',
-    defaultTestengBranch: 'origin/' + ficus_branch_name,
+    defaultTestengBranch: 'origin/' + ficus_test_branch_name,
     refSpec : '+refs/heads/' + ficus_branch_name + ':refs/remotes/origin/' + ficus_branch_name,
     defaultBranch : 'refs/heads/' + ficus_branch_name
 ]
