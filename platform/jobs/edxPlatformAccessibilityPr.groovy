@@ -61,7 +61,7 @@ Map publicHawthornJobConfig = [
     jobName: 'hawthorn-accessibility-pr',
     repoName: repo_name,
     workerLabel: 'hawthorn-jenkins-worker',
-    whitelistBranchRegex: '/' + hawthorn_branch_name_regex + '/',
+    whitelistBranchRegex: hawthorn_branch_name_regex,
     context: 'jenkins/hawthorn/a11y',
     triggerPhrase: /.*hawthorn\W+run\W+a11y.*/
 ]
@@ -71,7 +71,7 @@ Map publicGinkgoJobConfig = [
     jobName: 'ginkgo-accessibility-pr',
     repoName: repo_name,
     workerLabel: 'ginkgo-jenkins-worker',
-    whitelistBranchRegex: '/' + ginkgo_branch_name_regex + '/',
+    whitelistBranchRegex: ginkgo_branch_name_regex,
     context: 'jenkins/ginkgo/a11y',
     triggerPhrase: /.*ginkgo\W+run\W+a11y.*/
 ]
@@ -81,7 +81,7 @@ Map publicFicusJobConfig = [
     jobName: 'ficus-accessibility-pr',
     repoName: repo_name,
     workerLabel: 'ficus-jenkins-worker',
-    whitelistBranchRegex: '/' + ficus_branch_name_regex + '/',
+    whitelistBranchRegex: ficus_branch_name_regex,
     context: 'jenkins/ficus/a11y',
     triggerPhrase: /.*ficus\W+run\W+a11y.*/
 ]

@@ -77,7 +77,7 @@ Map hawthornJobConfig = [
     subsetJob: 'edx-platform-test-subset',
     repoName: repo_name,
     workerLabel: 'hawthorn-jenkins-worker',
-    whitelistBranchRegex: '/' + hawthorn_branch_name_regex + '/',
+    whitelistBranchRegex: hawthorn_branch_name_regex,
     context: 'jenkins/hawthorn/quality',
     triggerPhrase: /.*hawthorn\W+run\W+quality.*/,
     defaultTestengBranch: 'origin/' + hawthorn_test_branch_name,
