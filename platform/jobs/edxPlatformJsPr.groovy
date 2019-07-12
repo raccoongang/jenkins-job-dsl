@@ -70,7 +70,7 @@ Map publicHawthornJobConfig = [
     jobName: 'hawthorn-js-pr',
     repoName: repo_name,
     workerLabel: 'hawthorn-jenkins-worker',
-    whitelistBranchRegex: '/' + hawthorn_branch_name_regex + '/',
+    whitelistBranchRegex: hawthorn_branch_name_regex,
     context: 'jenkins/hawthorn/js',
     triggerPhrase: /.*hawthorn\W+run\W+js.*/
 ]
@@ -80,7 +80,7 @@ Map publicGinkgoJobConfig = [
     jobName: 'ginkgo-js-pr',
     repoName: repo_name,
     workerLabel: 'ginkgo-jenkins-worker',
-    whitelistBranchRegex: '/' + ginkgo_branch_name_regex + '/',
+    whitelistBranchRegex: ginkgo_branch_name_regex,
     context: 'jenkins/ginkgo/js',
     triggerPhrase: /.*ginkgo\W+run\W+js.*/
 ]
@@ -90,7 +90,7 @@ Map publicFicusJobConfig = [
     jobName: 'ficus-js-pr',
     repoName: repo_name,
     workerLabel: 'ficus-jenkins-worker',
-    whitelistBranchRegex: '/' + ficus_branch_name_regex + '/',
+    whitelistBranchRegex: ficus_branch_name_regex,
     context: 'jenkins/ficus/js',
     triggerPhrase: /.*ficus\W+run\W+js.*/
 ]
